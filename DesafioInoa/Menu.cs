@@ -9,6 +9,7 @@ namespace DesafioInoa
             var central = new CentralDeRecursos(new Dictionary<string, Action>() {
                 {"Programa de Teste 1", Teste.Executar},
                 {"Programa de Teste 2", Teste2.Executar},
+                {"Alerta de E-mail", Alerta.Executar},
                 
             });
 
