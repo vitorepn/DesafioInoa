@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DesafioInoa.src.api;
-using System.Net.Mail;
+﻿using System.Net.Mail;
+using static DesafioInoa.res.Alerta;
 
 namespace DesafioInoa.src.metodos
 {
@@ -23,6 +18,25 @@ namespace DesafioInoa.src.metodos
             mail.Body = "Seu ativo " + ativo + " atingiu o alvo superior";
             Enviar();
         }
+        public static void Executar(HashSet<Ativo> set)
+        {
+            mail.Body = "";
+            foreach(Ativo ativo in set)
+            {
+                switch (ativo.Email)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        mail.Body += "O ativo " + ativo.Ticker +" atingiu o alvo de venda\n";
+                        break;
+                    case 2:
+                        mail.Body += "O ativo " + ativo.Ticker + " atingiu o alvo de compra\n";
+                        break;
+                }
+            }
+            Enviar();
+            }
 
         static void Enviar(){
             try{
