@@ -6,28 +6,50 @@ namespace DesafioInoa.res
     {
         public static void Executar()
         {
-            Console.WriteLine("Insira o ativo que quer rastrear e os alvos na forma: TICKER XXX,XX XXX,XX");
+            
             HashSet<Ativo> set = new HashSet<Ativo>();
             string Resposta = "";
             do{
-                
-               Resposta = Console.ReadLine();
+                Console.WriteLine("Insira o ativo que quer rastrear e os alvos na forma: TICKER XXX,XX XXX,XX");
+                Resposta = Console.ReadLine();
                 string[] RespostaDividida = Resposta.Split(" ");
+                try
+                {
+                    string Ticker = RespostaDividida[0];
+                    float AlvoSuperior = float.Parse(RespostaDividida[1]);
+                    float AlvoInferior = float.Parse(RespostaDividida[2]);
 
-                string Ticker = RespostaDividida[0];
-                float AlvoSuperior = float.Parse(RespostaDividida[1]);
-                float AlvoInferior = float.Parse(RespostaDividida[2]);
-
-                Ativo atual = new Ativo(Ticker, AlvoSuperior, AlvoInferior);
-                set.Add(atual);
+                    Ativo atual = new Ativo(Ticker, AlvoSuperior, AlvoInferior);
+                    set.Add(atual);
+                }
+                catch (Exception)
+                {
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine("Erro de escrita");
+                    Console.ResetColor();
+                    continue;
+                }
+             
                 foreach (Ativo i in set)
                 {
-                    int Email = PertenceAoIntervalo.Executar(i.Ticker, i.AlvoSuperior, i.AlvoInferior);
-                    i.Email = Email;
+                    try
+                    {
+                        int Email = PertenceAoIntervalo.Executar(i.Ticker, i.AlvoSuperior, i.AlvoInferior);
+                        i.Email = Email;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine(ex.Message);
+                        Console.ResetColor();
+                        set.Remove(i);
+                    }
+                    Console.WriteLine(i.Ticker);
                 }
+                
                 EnviarEmail.Executar(set);
-                Console.WriteLine("Você pode pode adicionar mais de um ativo: ");
-                Console.WriteLine("Escreva TICKER 0 0 para remover");
             } while (true);
             
         }

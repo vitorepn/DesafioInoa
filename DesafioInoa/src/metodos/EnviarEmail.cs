@@ -28,14 +28,17 @@ namespace DesafioInoa.src.metodos
                     case 0:
                         break;
                     case 1:
-                        mail.Body += "O ativo " + ativo.Ticker +" atingiu o alvo de venda\n";
+                        mail.Body += "O ativo " + ativo.Ticker +" atingiu o alvo de venda" + ativo.AlvoSuperior + "\n";
                         break;
                     case 2:
-                        mail.Body += "O ativo " + ativo.Ticker + " atingiu o alvo de compra\n";
+                        mail.Body += "O ativo " + ativo.Ticker + " atingiu o alvo de compra" + ativo.AlvoInferior + "\n";
                         break;
                 }
             }
-            Enviar();
+            if (mail.Body != ""){
+                Enviar();
+            }
+            
             }
 
         static void Enviar(){
