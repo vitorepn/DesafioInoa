@@ -7,47 +7,43 @@ namespace DesafioInoa.src.metodos
     {
         public static MailMessage mail = api.mail.GerarMail();
         public static SmtpClient smtp = api.mail.GerarSmtp();
-        public static void Inferior(string ativo){
-            mail.Subject = "Seu ativo " + ativo + " atingiu o alvo superior";
-            mail.Body = "Seu ativo " + ativo + " atingiu o alvo superior";
-            Enviar();
-        }
-        public static void Superior(string ativo){
-             
-            mail.Subject = "Seu ativo " + ativo + " atingiu o alvo superior";
-            mail.Body = "Seu ativo " + ativo + " atingiu o alvo superior";
-            Enviar();
-        }
+
         public static void Executar(HashSet<Ativo> set)
         {
+            mail.Subject = "Alerta de ativos";
             mail.Body = "";
-            foreach(Ativo ativo in set)
+            foreach (Ativo ativo in set)
             {
                 switch (ativo.Email)
                 {
                     case 0:
                         break;
                     case 1:
-                        mail.Body += "O ativo " + ativo.Ticker +" atingiu o alvo de venda" + ativo.AlvoSuperior + "\n";
+                        mail.Body += "O ativo " + ativo.Ticker + " atingiu o alvo de venda:" + ativo.AlvoSuperior + "\n";
                         break;
                     case 2:
-                        mail.Body += "O ativo " + ativo.Ticker + " atingiu o alvo de compra" + ativo.AlvoInferior + "\n";
+                        mail.Body += "O ativo " + ativo.Ticker + " atingiu o alvo de compra:" + ativo.AlvoInferior + "\n";
                         break;
                 }
             }
-            if (mail.Body != ""){
+            if (mail.Body != "")
+            {
                 Enviar();
             }
-            
-            }
 
-        static void Enviar(){
-            try{
+        }
+        static void Enviar()
+        {
+            try
+            {
                 smtp.Send(mail);
-            }catch (Exception ex){
-                Console.WriteLine(ex.ToString());
+                
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
-        
+
     }
 }

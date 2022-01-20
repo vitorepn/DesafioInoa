@@ -3,7 +3,6 @@ using System.Configuration;
 
 namespace DesafioInoa.src.api
 {
-
     public class mail {
         static string from = ConfigurationManager.AppSettings["from"];
         static string password = ConfigurationManager.AppSettings["password"];
