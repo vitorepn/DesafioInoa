@@ -3,27 +3,27 @@ using System.Configuration;
 
 namespace DesafioInoa.src.api
 {
-    internal class finance {
+    internal class finance
+    {
         static string ApiKey = ConfigurationManager.AppSettings["ApiKey"];
         static RetornoApi Stock;
-        public static RetornoApi ObjetoStock(string InputStock) {
-            
-            string strURL = "https://api.twelvedata.com/time_series?apikey="+ApiKey+"&interval=1min&type=stock&symbol="+InputStock+"&timezone=America/Sao_Paulo&format=JSON&outputsize=1";
-            string result = "";
-            using (HttpClient client = new HttpClient()) {
-                var response = client.GetAsync(strURL).Result;
+        public static RetornoApi ObjetoStock(string InputStock)
+        {
 
-                if (response.IsSuccessStatusCode) {
+            string strURL = "https://api.twelvedata.com/time_series?apikey=" + ApiKey + "&interval=1min&type=stock&symbol=" + InputStock + "&timezone=America/Sao_Paulo&format=JSON&outputsize=1";
+            string result = "";
+
+            using (HttpClient client = new HttpClient())
+            {
+                var response = client.GetAsync(strURL).Result;
+                if (response.IsSuccessStatusCode)
+                {
                     result = response.Content.ReadAsStringAsync().Result;
                 }
             }
             Stock = JsonConvert.DeserializeObject<RetornoApi>(result);
             return Stock;
         }
-
-        
-
-        
         public class Meta
         {
             public string symbol { get; set; }
@@ -50,9 +50,5 @@ namespace DesafioInoa.src.api
             public List<Value> values { get; set; }
             public string status { get; set; }
         }
-
-
-
-
     }
 }

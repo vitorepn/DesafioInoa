@@ -2,19 +2,18 @@
 
 namespace DesafioInoa.src.metodos
 {
-    internal class GetStock
+    internal class ReceberStock
     {
         public static Dictionary<string, float> Executar(string InputStock)
         {
             Dictionary<string, float> DadosStock = new Dictionary<string, float>();
-            finance.RetornoApi Stock ;
+            finance.RetornoApi Stock;
             try
             {
                 Stock = finance.ObjetoStock(InputStock);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                
                 throw new ArgumentException("Ativo inválido");
             }
             DadosStock.Add("open", Stock.values[0].open);

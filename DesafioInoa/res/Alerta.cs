@@ -4,34 +4,45 @@ namespace DesafioInoa.res
 {
     internal class Alerta
     {
-        public static void Executar()
+        static HashSet<Ativo> set = new HashSet<Ativo>();
+        static string[] RespostaDividida = new string[3];
+        public static void Main()
         {
-           
-            HashSet<Ativo> set = new HashSet<Ativo>();
-            string Resposta = "";
-            do{
-                Stopwatch stopwatch = new Stopwatch();
-                stopwatch.Start();
-                Console.WriteLine("Insira o ativo que quer rastrear e os alvos na forma: TICKER XXX,XX XXX,XX");
+
+            string Resposta = ""; ;
+            int Delay = 60000;
+            do {
+                Stopwatch Cronometro = new Stopwatch();
+                Cronometro.Start();
                 try
                 {
-                    Console.WriteLine("Please enter your name within the next 5 seconds.");
+                    Console.WriteLine("Insira o ativo que quer rastrear e os alvos na forma: TICKER XXX,XX XXX,XX");
                     Resposta = Reader.ReadLine(30000);
-                    Console.WriteLine("Hello, {0}!", Resposta);
+
                 }
                 catch (TimeoutException)
                 {
-                    Console.WriteLine("Sorry, you waited too long.");
+                    Resposta = "0 0 0";
                 }
-                string[] RespostaDividida = Resposta.Split(" ");
+                RespostaDividida = Resposta.Split(" ");
                 try
                 {
-                    string Ticker = RespostaDividida[0];
-                    float AlvoSuperior = float.Parse(RespostaDividida[1]);
-                    float AlvoInferior = float.Parse(RespostaDividida[2]);
+                    if (RespostaDividida[0] != "0")
+                    {
+                        string Ticker = RespostaDividida[0];
+                        float AlvoSuperior = float.Parse(RespostaDividida[1]);
+                        float AlvoInferior = float.Parse(RespostaDividida[2]);
+                        if (AlvoInferior > AlvoSuperior)
+                        {
+                            float Aux = AlvoSuperior;
+                            AlvoSuperior = AlvoInferior;
+                            AlvoInferior = Aux;
+                        }
 
-                    Ativo atual = new Ativo(Ticker, AlvoSuperior, AlvoInferior);
-                    set.Add(atual);
+                        Ativo atual = new Ativo(Ticker, AlvoSuperior, AlvoInferior);
+                        set.Add(atual);
+                    }
+
                 }
                 catch (Exception)
                 {
@@ -41,29 +52,44 @@ namespace DesafioInoa.res
                     Console.ResetColor();
                     continue;
                 }
-             
-                foreach (Ativo i in set)
-                {
-                    try
-                    {
-                        int Email = PertenceAoIntervalo.Executar(i.Ticker, i.AlvoSuperior, i.AlvoInferior);
-                        i.Email = Email;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Red;
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine(ex.Message);
-                        Console.ResetColor();
-                        set.Remove(i);
-                    }
-                }
-                stopwatch.Stop();
+
+                AssociarEmail();
+                Cronometro.Stop();
                 EnviarEmail.Executar(set);
-                Thread.Sleep(60000- Convert.ToInt32(stopwatch.ElapsedMilliseconds));
-                Console.WriteLine("Executando novamente");
+                Console.WriteLine("\nRastreando:");
+                ExibirSet();
+
+                Thread.Sleep(Delay - Convert.ToInt32(Cronometro.ElapsedMilliseconds));
+
+
             } while (true);
-            
+
+        }
+        public static void ExibirSet()
+        {
+            foreach (Ativo i in set)
+            {               
+                Console.WriteLine("Ativo: " + i.Ticker + " Alvo superior: " + i.AlvoSuperior + " Alvo inferior: " + i.AlvoInferior);
+            }
+        }
+        public static void AssociarEmail()
+        {
+            foreach (Ativo ativo in set)
+            {
+                try
+                {
+                    int Email = PertenceAoIntervalo.Executar(ativo.Ticker, ativo.AlvoSuperior, ativo.AlvoInferior);
+                    ativo.Email = Email;
+                }
+                catch (Exception ex)
+                {
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(ex.Message);
+                    Console.ResetColor();
+                    set.Remove(ativo);
+                }
+            }
         }
         class Reader
         {
@@ -90,7 +116,6 @@ namespace DesafioInoa.res
                 }
             }
 
-            // omit the parameter to read a line without a timeout
             public static string ReadLine(int timeOutMillisecs = Timeout.Infinite)
             {
                 getInput.Set();
