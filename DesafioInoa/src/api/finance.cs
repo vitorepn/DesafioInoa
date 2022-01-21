@@ -6,11 +6,12 @@ namespace DesafioInoa.src.api
     internal class finance
     {
         static string ApiKey = ConfigurationManager.AppSettings["ApiKey"];
+        static string ApiLink = ConfigurationManager.AppSettings["ApiLink"];
         static RetornoApi Stock;
         public static RetornoApi ObjetoStock(string InputStock)
         {
 
-            string strURL = "https://api.twelvedata.com/time_series?apikey=" + ApiKey + "&interval=1min&type=stock&symbol=" + InputStock + "&timezone=America/Sao_Paulo&format=JSON&outputsize=1";
+            string strURL = ApiLink + "apikey=" + ApiKey + "&symbol=" + InputStock ;
             string result = "";
 
             using (HttpClient client = new HttpClient())
