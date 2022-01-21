@@ -1,5 +1,6 @@
 ﻿using DesafioInoa.src.metodos;
 using System.Diagnostics;
+
 namespace DesafioInoa.res
 {
     internal class Alerta
@@ -9,7 +10,7 @@ namespace DesafioInoa.res
         public static void Main()
         {
 
-            string Resposta = ""; ;
+            string Resposta = "";
             int Delay = 60000;
             do {
                 Stopwatch Cronometro = new Stopwatch();
@@ -67,9 +68,9 @@ namespace DesafioInoa.res
         }
         public static void ExibirSet()
         {
-            foreach (Ativo i in set)
+            foreach (Ativo ativo in set)
             {               
-                Console.WriteLine("Ativo: " + i.Ticker + " Alvo superior: " + i.AlvoSuperior + " Alvo inferior: " + i.AlvoInferior);
+                Console.WriteLine("Ativo: " + ativo.Ticker + " Alvo superior: " + ativo.AlvoSuperior + " Alvo inferior: " + ativo.AlvoInferior);
             }
         }
         public static void AssociarEmail()
@@ -123,7 +124,7 @@ namespace DesafioInoa.res
                 if (success)
                     return input;
                 else
-                    throw new TimeoutException("User did not provide input within the timelimit.");
+                    throw new TimeoutException("A resposta excedeu o tempo limite");
             }
         }
         public class Ativo {
